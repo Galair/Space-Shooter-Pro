@@ -80,6 +80,8 @@ public class Enemy : MonoBehaviour
             _isNotHit = false;
             if (other.TryGetComponent(out Player player)) player.Damage();
             _animator.SetTrigger("OnEnemyDeath");
+            // Inactivate enemy thrusters
+            for (int i = 0; i < transform.childCount; i++) transform.GetChild(i).gameObject.SetActive(false);
             AudioSource.PlayClipAtPoint(_explosionSound, transform.position);
             Destroy(this.gameObject, 2.633f);
         }
@@ -98,6 +100,8 @@ public class Enemy : MonoBehaviour
                 }
             }
             _animator.SetTrigger("OnEnemyDeath");
+            // Inactivate enemy thrusters
+            for (int i = 0; i < transform.childCount; i++) transform.GetChild(i).gameObject.SetActive(false);
             AudioSource.PlayClipAtPoint(_explosionSound, transform.position);
             Destroy(other.gameObject);
             Destroy(this.gameObject, 2.633f);

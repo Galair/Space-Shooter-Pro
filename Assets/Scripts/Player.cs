@@ -5,9 +5,11 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private float _normalSpeed = 5.0f;
+    private float _normalSpeed = 4.0f;
     [SerializeField]
-    private float _speedBoostMultiplier = 2.0f;
+    private float _speedBoostMultiplier = 1.5f;
+    [SerializeField]
+    private float _thrusterBoostMultiplier = 2.0f;
     [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
@@ -26,7 +28,7 @@ public class Player : MonoBehaviour
     private Coroutine _tripleShotCoroutine;
     private Coroutine _speedBoostCoroutine;
     [SerializeField]
-    private GameObject _shieldGameObject;
+    private GameObject _shieldGameObject, _thrusterBoostGameObject;
     [SerializeField]
     GameObject[] _engines;
 
@@ -70,6 +72,16 @@ public class Player : MonoBehaviour
         Vector3 velocity = direction * _normalSpeed;
         
         if (_isSpeedBoostActive) velocity *= _speedBoostMultiplier;
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            velocity *= _thrusterBoostMultiplier;
+            _thrusterBoostGameObject.SetActive(true);
+        }
+        else
+        {
+            _thrusterBoostGameObject.SetActive(false);
+        }
+        
         transform.Translate(velocity * Time.deltaTime);
         
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);
