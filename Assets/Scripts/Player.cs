@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class Player : MonoBehaviour
 
     private bool _isTripleShotActive = false;
     private bool _isSpeedBoostActive = false;
-    private bool _isShieldActive = false;
+    private int _shieldStrength = 0;
     private Coroutine _tripleShotCoroutine;
     private Coroutine _speedBoostCoroutine;
     [SerializeField]
@@ -62,7 +63,6 @@ public class Player : MonoBehaviour
             FireLaser();
         }
     }
-
 
     void CalculateMovement()
     {
@@ -105,12 +105,16 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
-        if (_isShieldActive)
+        if(_shieldStrength > 0)
         {
-            _isShieldActive = false;
-            _shieldGameObject.SetActive(false);
+            _uiManager.UpdateShield(--_shieldStrength);
+            if (_shieldGameObject.TryGetComponent<SpriteRenderer>(out SpriteRenderer shield))
+            {
+                shield.color = new Color(1f, 1f, 1f, _shieldStrength / 3.0f);
+            }
             return;
         }
+
         _uiManager.UpdateLive(--_lives);
         switch (_lives)
         {
@@ -158,8 +162,12 @@ public class Player : MonoBehaviour
 
     public void ShieldActive()
     {
-        _isShieldActive = true;
-        _shieldGameObject.SetActive(true);
+        _shieldStrength = 3;
+        _uiManager.UpdateShield(_shieldStrength);
+        if (_shieldGameObject.TryGetComponent<SpriteRenderer>(out SpriteRenderer shield))
+        {
+            shield.color = new Color(1f, 1f, 1f, _shieldStrength / 3.0f);
+        }
     }
 
     public void AddScore(int scoreToAdd)

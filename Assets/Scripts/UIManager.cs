@@ -8,9 +8,9 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private Text _scoreText;
     [SerializeField]
-    private Image _livesImage;
+    private Image _livesImage, _shieldsImage;
     [SerializeField]
-    private Sprite[] _liveSprites;
+    private Sprite[] _liveSprites, _shieldSprites;
     [SerializeField]
     private Text _gameOverText;
     private GameManager _gameManager;
@@ -25,6 +25,7 @@ public class UIManager : MonoBehaviour
         }
         UpdateScore(0);
         UpdateLive(3);
+        UpdateShield(0);
         _gameOverText.gameObject.SetActive(false);
     }
 
@@ -37,6 +38,11 @@ public class UIManager : MonoBehaviour
     {
         _livesImage.sprite = _liveSprites[Mathf.Clamp(currentLives,0,3)];
         if (currentLives == 0) StartCoroutine(GameOverFlickerRoutine());
+    }
+
+    public void UpdateShield(int currentShields)
+    {
+        _shieldsImage.sprite = _shieldSprites[Mathf.Clamp(currentShields, 0, 3)];
     }
 
     IEnumerator GameOverFlickerRoutine()
