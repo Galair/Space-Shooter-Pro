@@ -191,6 +191,12 @@ public class Player : MonoBehaviour
         _uiManager.UpdateScore(_score);
     }
 
+    public void AmmoCollected()
+    {
+        _ammoCount = _maxAmmoCount;
+        _uiManager.UpdateAmmo(_ammoCount);
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if(other.CompareTag("Laser"))

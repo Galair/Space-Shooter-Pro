@@ -2015,6 +2015,7 @@ MonoBehaviour:
   - {fileID: 4749351746837805721, guid: a072bd9004f181e44ab6ac5a3333eb14, type: 3}
   - {fileID: 6741761416733710832, guid: 791ea4022c10a86439693e5e94a4d1bd, type: 3}
   - {fileID: 5017996140252054665, guid: 9b2ea2fc76550074398674f73ca1de78, type: 3}
+  - {fileID: 5017996140252054665, guid: 18a7f4be6f7d7d94cac39f002fd2e5d5, type: 3}
   _enemyContainer: {fileID: 228306387}
 --- !u!4 &1778270512
 Transform:
