@@ -38,7 +38,11 @@ public class Player : MonoBehaviour
     private UIManager _uiManager;
 
     [SerializeField]
-    private AudioClip _laserSound, _explosionSound;
+    private AudioClip _laserSound, _explosionSound, _ammoOutSound;
+
+    [SerializeField]
+    private int _maxAmmoCount = 15;
+    private int _ammoCount;
 
     // Start is called before the first frame update
     void Start()
@@ -52,6 +56,9 @@ public class Player : MonoBehaviour
         {
             Debug.LogError(gameObject.name + ": The UIManager on Canvas is NULL.");
         }
+        _uiManager.SetMaxAmmoCount(_maxAmmoCount);
+        _ammoCount = _maxAmmoCount;
+        _uiManager.UpdateAmmo(_ammoCount);
     }
 
     // Update is called once per frame
@@ -60,7 +67,15 @@ public class Player : MonoBehaviour
         CalculateMovement();
         if (Input.GetKeyDown(KeyCode.Space) && (Time.time > _canFire))
         {
-            FireLaser();
+            if (_ammoCount == 0)
+            {
+                AudioSource.PlayClipAtPoint(_ammoOutSound, transform.position);
+            }
+            else
+            {
+                _uiManager.UpdateAmmo(--_ammoCount);
+                FireLaser();
+            }
         }
     }
 

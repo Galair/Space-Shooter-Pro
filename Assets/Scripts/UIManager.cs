@@ -6,9 +6,10 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [SerializeField]
-    private Text _scoreText;
+    private Text _scoreText, _ammoText;
     [SerializeField]
-    private Image _livesImage, _shieldsImage;
+    private Image _livesImage, _shieldsImage, _ammoImage;
+    private int _maxAmmoCount = 15;
     [SerializeField]
     private Sprite[] _liveSprites, _shieldSprites;
     [SerializeField]
@@ -43,6 +44,16 @@ public class UIManager : MonoBehaviour
     public void UpdateShield(int currentShields)
     {
         _shieldsImage.sprite = _shieldSprites[Mathf.Clamp(currentShields, 0, 3)];
+    }
+
+    public void SetMaxAmmoCount(int maxAmmoCount)
+    {
+        _maxAmmoCount = maxAmmoCount;
+    }
+    public void UpdateAmmo(int currentAmmo)
+    {
+        _ammoImage.fillAmount = (float)currentAmmo / _maxAmmoCount;
+        _ammoText.text = currentAmmo.ToString();
     }
 
     IEnumerator GameOverFlickerRoutine()
