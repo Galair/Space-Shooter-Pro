@@ -18,9 +18,11 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _fireRate = 0.2f;
     private float _canFire = -1.0f;
+
+    private int _lives;
     [SerializeField]
-    private int _lives = 3;
-    
+    private int _maxLives = 3;
+
     private SpawnManager _spawnManager;
 
     private bool _isTripleShotActive = false;
@@ -59,6 +61,8 @@ public class Player : MonoBehaviour
         _uiManager.SetMaxAmmoCount(_maxAmmoCount);
         _ammoCount = _maxAmmoCount;
         _uiManager.UpdateAmmo(_ammoCount);
+        _lives = _maxLives;
+        _uiManager.UpdateLive(_lives);
     }
 
     // Update is called once per frame
@@ -195,6 +199,23 @@ public class Player : MonoBehaviour
     {
         _ammoCount = _maxAmmoCount;
         _uiManager.UpdateAmmo(_ammoCount);
+    }
+
+    public void HealthCollected()
+    {
+        if (_lives < _maxLives)
+        {
+            _uiManager.UpdateLive(++_lives);
+            if (_lives > 2)
+            {
+                _engines[0].SetActive(false);
+                _engines[1].SetActive(false);
+            }
+            else
+            {
+                _engines[Random.Range(0,2)].SetActive(false);
+            }
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)

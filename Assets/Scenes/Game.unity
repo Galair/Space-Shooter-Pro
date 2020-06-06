@@ -1377,7 +1377,7 @@ MonoBehaviour:
   _tripleShotPrefab: {fileID: 3075795858306781648, guid: c551fc1ea2acd604192b84427aa7b855,
     type: 3}
   _fireRate: 0.2
-  _lives: 3
+  _maxLives: 3
   _shieldGameObject: {fileID: 606665563}
   _thrusterBoostGameObject: {fileID: 836356509}
   _engines:
@@ -2016,6 +2016,7 @@ MonoBehaviour:
   - {fileID: 6741761416733710832, guid: 791ea4022c10a86439693e5e94a4d1bd, type: 3}
   - {fileID: 5017996140252054665, guid: 9b2ea2fc76550074398674f73ca1de78, type: 3}
   - {fileID: 5017996140252054665, guid: 18a7f4be6f7d7d94cac39f002fd2e5d5, type: 3}
+  - {fileID: 5017996140252054665, guid: 0325c98649d4b6240ae99543c911037a, type: 3}
   _enemyContainer: {fileID: 228306387}
 --- !u!4 &1778270512
 Transform:
