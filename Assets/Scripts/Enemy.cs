@@ -40,7 +40,7 @@ public class Enemy : MonoBehaviour
     private void CalculateMovement()
     {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
-        if (transform.position.y < -5.37f) transform.position = new Vector3(Random.Range(-9.45f, 9.45f), 6.93f, 0);
+        if (transform.position.y < -6.5f) transform.position = new Vector3(Random.Range(-9.45f, 9.45f), 6.93f, 0);
     }
 
     IEnumerator FireLaserRoutine()
@@ -86,7 +86,7 @@ public class Enemy : MonoBehaviour
             Destroy(this.gameObject, 2.633f);
         }
 
-        if (other.CompareTag("Laser"))
+        if (other.CompareTag("Laser") || other.CompareTag("Missile"))
         {
             Destroy(GetComponent<Collider2D>());
             StopAllCoroutines();
@@ -94,7 +94,7 @@ public class Enemy : MonoBehaviour
             _isNotHit = false;
             if (_player != null)
             {
-                if (other.TryGetComponent<Laser>(out Laser laser) && laser.IsPlayerLaser)
+                if (other.CompareTag("Missile") || (other.TryGetComponent<Laser>(out Laser laser) && laser.IsPlayerLaser))
                 {
                     _player.AddScore(10);
                 }

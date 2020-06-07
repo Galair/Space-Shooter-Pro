@@ -9,6 +9,8 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject[] _powerups;
     [SerializeField]
+    private GameObject[] _rarePowerups;
+    [SerializeField]
     private GameObject _enemyContainer;
     private bool _isPlayerAlive = true;
 
@@ -39,7 +41,15 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(5.0f);
         while (_isPlayerAlive)
         {
-            Instantiate(_powerups[Random.Range(0, _powerups.Length)], new Vector3(Random.Range(-9f, 9f), 7.6f, 0), Quaternion.identity);
+            // 10% chance for rare powerup
+            if (Random.value > 0.9f)
+            {
+                Instantiate(_rarePowerups[Random.Range(0, _rarePowerups.Length)], new Vector3(Random.Range(-9f, 9f), 7.6f, 0), Quaternion.identity);
+            }
+            else
+            {
+                Instantiate(_powerups[Random.Range(0, _powerups.Length)], new Vector3(Random.Range(-9f, 9f), 7.6f, 0), Quaternion.identity);
+            }
             yield return new WaitForSeconds(Random.Range(4f, 8f));
         }
     }

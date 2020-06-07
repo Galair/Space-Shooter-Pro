@@ -16,6 +16,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _tripleShotPrefab;
     [SerializeField]
+    private GameObject _missilePrefab;
+    private GameObject _secondaryFirePrefab;
+    [SerializeField]
     private float _fireRate = 0.2f;
     private float _canFire = -1.0f;
 
@@ -25,10 +28,10 @@ public class Player : MonoBehaviour
 
     private SpawnManager _spawnManager;
 
-    private bool _isTripleShotActive = false;
+    private bool _isSecondaryFireActive = false;
     private bool _isSpeedBoostActive = false;
     private int _shieldStrength = 0;
-    private Coroutine _tripleShotCoroutine;
+    private Coroutine _secondaryFireCoroutine;
     private Coroutine _speedBoostCoroutine;
     [SerializeField]
     private GameObject _shieldGameObject, _thrusterBoostGameObject;
@@ -111,9 +114,9 @@ public class Player : MonoBehaviour
     void FireLaser()
     {
         _canFire = Time.time + _fireRate;
-        if (_isTripleShotActive)
+        if (_isSecondaryFireActive)
         {
-            Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
+            Instantiate(_secondaryFirePrefab, transform.position, Quaternion.identity);
         }
         else
         {
@@ -155,15 +158,24 @@ public class Player : MonoBehaviour
 
     public void TripleShotActive()
     {
-        if (_tripleShotCoroutine != null) StopCoroutine(_tripleShotCoroutine);
-        _isTripleShotActive = true;
-        _tripleShotCoroutine = StartCoroutine(TripleShotPowerDownRoutine());
+        if (_secondaryFireCoroutine != null) StopCoroutine(_secondaryFireCoroutine);
+        _isSecondaryFireActive = true;
+        _secondaryFirePrefab = _tripleShotPrefab;
+        _secondaryFireCoroutine = StartCoroutine(SecondaryFirePowerDownRoutine());
     }
 
-    IEnumerator TripleShotPowerDownRoutine()
+    public void MissileActive()
+    {
+        if (_secondaryFireCoroutine != null) StopCoroutine(_secondaryFireCoroutine);
+        _isSecondaryFireActive = true;
+        _secondaryFirePrefab = _missilePrefab;
+        _secondaryFireCoroutine = StartCoroutine(SecondaryFirePowerDownRoutine());
+    }
+
+    IEnumerator SecondaryFirePowerDownRoutine()
     {
         yield return new WaitForSeconds(5f);
-        _isTripleShotActive = false;
+        _isSecondaryFireActive = false;
     }
 
     public void SpeedBoostActive()

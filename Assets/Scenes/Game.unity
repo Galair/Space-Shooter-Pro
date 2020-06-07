@@ -332,7 +332,7 @@ Transform:
   m_LocalScale: {x: 1.069, y: 1.069, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &302619967
 GameObject:
@@ -1376,6 +1376,8 @@ MonoBehaviour:
     type: 3}
   _tripleShotPrefab: {fileID: 3075795858306781648, guid: c551fc1ea2acd604192b84427aa7b855,
     type: 3}
+  _missilePrefab: {fileID: 2527865266439141248, guid: 92bab78636b3cf344a41bc63d3455a2c,
+    type: 3}
   _fireRate: 0.2
   _maxLives: 3
   _shieldGameObject: {fileID: 606665563}
@@ -1454,7 +1456,7 @@ Transform:
   - {fileID: 1716911615}
   - {fileID: 302619968}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1573576606
 GameObject:
@@ -1580,7 +1582,7 @@ RectTransform:
   - {fileID: 1212884624}
   - {fileID: 1266651248}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1677,7 +1679,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &1677639264
 GameObject:
@@ -2017,6 +2019,8 @@ MonoBehaviour:
   - {fileID: 5017996140252054665, guid: 9b2ea2fc76550074398674f73ca1de78, type: 3}
   - {fileID: 5017996140252054665, guid: 18a7f4be6f7d7d94cac39f002fd2e5d5, type: 3}
   - {fileID: 5017996140252054665, guid: 0325c98649d4b6240ae99543c911037a, type: 3}
+  _rarePowerups:
+  - {fileID: 4749351746837805721, guid: 2f46d5f2f0fd3bc4da248d42043a6eba, type: 3}
   _enemyContainer: {fileID: 228306387}
 --- !u!4 &1778270512
 Transform:
@@ -2031,7 +2035,7 @@ Transform:
   m_Children:
   - {fileID: 228306388}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1911547298
 GameObject:
@@ -2141,7 +2145,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2056229904
 GameObject:
@@ -2264,6 +2268,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Asteroid
       objectReference: {fileID: 0}
+    - target: {fileID: 9072614067129246531, guid: 47d64cdca0e5e0a4797eb48dee3948e7,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 9072614067129246542, guid: 47d64cdca0e5e0a4797eb48dee3948e7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2302,7 +2311,7 @@ PrefabInstance:
     - target: {fileID: 9072614067129246542, guid: 47d64cdca0e5e0a4797eb48dee3948e7,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9072614067129246542, guid: 47d64cdca0e5e0a4797eb48dee3948e7,
         type: 3}
