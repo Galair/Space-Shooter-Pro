@@ -54,6 +54,8 @@ public class Player : MonoBehaviour
     private float _thrusterMaxNitro = 5.0f;
     private float _thrusterNitro;
 
+    private Transform _mainCameraInitialTransform;
+
 
     // Start is called before the first frame update
     void Start()
@@ -164,6 +166,7 @@ public class Player : MonoBehaviour
         }
 
         _uiManager.UpdateLive(--_lives);
+        if (Camera.main.TryGetComponent<MainCamera>(out MainCamera mainCamera)) mainCamera.CameraShake();
         switch (_lives)
         {
             case 2: 
