@@ -44,10 +44,16 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private AudioClip _laserSound, _explosionSound, _ammoOutSound;
+    private AudioSource _thrusterSound;
 
     [SerializeField]
     private int _maxAmmoCount = 15;
     private int _ammoCount;
+
+    [SerializeField]
+    private float _thrusterMaxNitro = 5.0f;
+    private float _thrusterNitro;
+
 
     // Start is called before the first frame update
     void Start()
@@ -61,11 +67,18 @@ public class Player : MonoBehaviour
         {
             Debug.LogError(gameObject.name + ": The UIManager on Canvas is NULL.");
         }
+        if (!TryGetComponent<AudioSource>(out _thrusterSound))
+        {
+            Debug.LogError(gameObject.name + ": The AudioSource (Thruster Sound) is NULL.");
+        }
+
         _uiManager.SetMaxAmmoCount(_maxAmmoCount);
         _ammoCount = _maxAmmoCount;
         _uiManager.UpdateAmmo(_ammoCount);
         _lives = _maxLives;
         _uiManager.UpdateLive(_lives);
+        _thrusterNitro = _thrusterMaxNitro;
+        _uiManager.UpdateThrusterNitro(_thrusterNitro);
     }
 
     // Update is called once per frame
@@ -96,14 +109,27 @@ public class Player : MonoBehaviour
         if (_isSpeedBoostActive) velocity *= _speedBoostMultiplier;
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            velocity *= _thrusterBoostMultiplier;
-            _thrusterBoostGameObject.SetActive(true);
+            if (_thrusterNitro > 0.0f)
+            {
+                velocity *= _thrusterBoostMultiplier;
+                _thrusterBoostGameObject.SetActive(true);
+                if (!_thrusterSound.isPlaying) _thrusterSound.Play();
+                _thrusterNitro -= Time.deltaTime;
+            }
+            else
+            {
+                _thrusterBoostGameObject.SetActive(false);
+                _thrusterSound.Stop();
+            }
         }
         else
         {
             _thrusterBoostGameObject.SetActive(false);
+            _thrusterSound.Stop();
+            _thrusterNitro = Mathf.Min(_thrusterNitro + Time.deltaTime, _thrusterMaxNitro);
         }
-        
+        _uiManager.UpdateThrusterNitro(_thrusterNitro);
+
         transform.Translate(velocity * Time.deltaTime);
         
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);

@@ -6,10 +6,11 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [SerializeField]
-    private Text _scoreText, _ammoText;
+    private Text _scoreText, _ammoText, _thrusterText;
     [SerializeField]
-    private Image _livesImage, _shieldsImage, _ammoImage;
+    private Image _livesImage, _shieldsImage, _ammoImage, _thrusterImage;
     private int _maxAmmoCount = 15;
+    private float _maxThrusterNitro = 5.0f;
     [SerializeField]
     private Sprite[] _liveSprites, _shieldSprites;
     [SerializeField]
@@ -54,6 +55,16 @@ public class UIManager : MonoBehaviour
     {
         _ammoImage.fillAmount = (float)currentAmmo / _maxAmmoCount;
         _ammoText.text = currentAmmo.ToString();
+    }
+
+    public void SetMaxThrusterNitro(int maxThrusterNitro)
+    {
+        _maxThrusterNitro = maxThrusterNitro;
+    }
+    public void UpdateThrusterNitro(float thrusterNitro)
+    {
+        _thrusterImage.fillAmount = thrusterNitro / _maxThrusterNitro;
+        _thrusterText.text = Mathf.RoundToInt(_thrusterImage.fillAmount * 100).ToString() + "%";
     }
 
     IEnumerator GameOverFlickerRoutine()
