@@ -13,6 +13,18 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject _enemyContainer;
     private bool _isPlayerAlive = true;
+    private int _enemyWaveCounter = 1;
+    private bool _currentWaveEnded = false;
+    private Coroutine currentWaveRoutine;
+    private UIManager _uiManager;
+
+    private void Start()
+    {
+        if (!GameObject.Find("Canvas").TryGetComponent<UIManager>(out _uiManager))
+        {
+            Debug.LogError(gameObject.name + ": The UIManager on Canvas is NULL.");
+        }
+    }
 
     public void StartSpawning()
     {
@@ -28,8 +40,25 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnEnemyRoutine()
     {
-        yield return new WaitForSeconds(3.0f);
-        while (_isPlayerAlive)
+        yield return new WaitForSeconds(2f);
+        while (_isPlayerAlive) {
+            
+            _currentWaveEnded = false;
+            _uiManager.ShowWaveNumber(_enemyWaveCounter, _enemyWaveCounter * 2);
+            currentWaveRoutine = StartCoroutine(SpawnEnemysWaveRoutine(_enemyWaveCounter*2));
+            while ((_currentWaveEnded == false) || (_enemyContainer.transform.childCount > 0))
+            {
+                yield return new WaitForSeconds(1f);
+            }
+            _enemyWaveCounter++;
+        }
+    }
+
+    IEnumerator SpawnEnemysWaveRoutine(int enemysToSpawn)
+    {
+        yield return new WaitForSeconds(2.0f);
+        int currentEnemy = enemysToSpawn;
+        do
         {
             GameObject obj = Instantiate(_enemyPrefab, new Vector3(Random.Range(-9f, 9f), 7.8f, 0), Quaternion.identity, _enemyContainer.transform);
             if (obj.TryGetComponent<Enemy>(out Enemy enemy))
@@ -39,9 +68,11 @@ public class SpawnManager : MonoBehaviour
                 float enemyAmplitude = Random.Range(1f, 2f);
                 float enemyFrequency = Random.Range(1f, 2f);
                 enemy.SetEnemyMovementType(enemyMovementType, enemySpeed, enemyAmplitude, enemyFrequency);
+                currentEnemy--;
             }
-            yield return new WaitForSeconds(5.0f);
-        }
+            yield return new WaitForSeconds(Random.Range(0.5f, 1.5f));
+        } while (_isPlayerAlive && (currentEnemy > 0));
+        _currentWaveEnded = true;
     }
 
     IEnumerator SpawnPowerupRoutine()

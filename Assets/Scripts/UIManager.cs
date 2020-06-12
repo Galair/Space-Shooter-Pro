@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,7 +7,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [SerializeField]
-    private Text _scoreText, _ammoText, _maxAmmoText, _thrusterText;
+    private Text _scoreText, _ammoText, _maxAmmoText, _thrusterText, _waveText;
     [SerializeField]
     private Image _livesImage, _shieldsImage, _ammoImage, _thrusterImage;
     private int _maxAmmoCount = 15;
@@ -29,6 +30,7 @@ public class UIManager : MonoBehaviour
         UpdateLive(3);
         UpdateShield(0);
         _gameOverText.gameObject.SetActive(false);
+        _waveText.gameObject.SetActive(false);
     }
 
     public void UpdateScore(int score)
@@ -68,6 +70,12 @@ public class UIManager : MonoBehaviour
         _thrusterText.text = Mathf.RoundToInt(_thrusterImage.fillAmount * 100).ToString() + "%";
     }
 
+    public void ShowWaveNumber(int waveNumber, int enemyNumber)
+    {
+        _waveText.text = "Wave: " + waveNumber + Environment.NewLine + " Enemies: " + enemyNumber;
+        StartCoroutine(WaveNumberShowRoutine());
+    }
+
     IEnumerator GameOverFlickerRoutine()
     {
         _gameManager.GameOver();
@@ -79,5 +87,12 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             _gameOverText.text = "GAME OVER";
         }
+    }
+
+    IEnumerator WaveNumberShowRoutine()
+    {
+        _waveText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2.5f);
+        _waveText.gameObject.SetActive(false);
     }
 }
