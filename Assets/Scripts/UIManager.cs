@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [SerializeField]
-    private Text _scoreText, _ammoText, _thrusterText;
+    private Text _scoreText, _ammoText, _maxAmmoText, _thrusterText;
     [SerializeField]
     private Image _livesImage, _shieldsImage, _ammoImage, _thrusterImage;
     private int _maxAmmoCount = 15;
@@ -50,6 +50,7 @@ public class UIManager : MonoBehaviour
     public void SetMaxAmmoCount(int maxAmmoCount)
     {
         _maxAmmoCount = maxAmmoCount;
+        _maxAmmoText.text = _maxAmmoCount.ToString();
     }
     public void UpdateAmmo(int currentAmmo)
     {
