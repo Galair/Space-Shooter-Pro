@@ -31,7 +31,15 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(3.0f);
         while (_isPlayerAlive)
         {
-            Instantiate(_enemyPrefab, new Vector3(Random.Range(-9f, 9f), 7.8f, 0), Quaternion.identity, _enemyContainer.transform);
+            GameObject obj = Instantiate(_enemyPrefab, new Vector3(Random.Range(-9f, 9f), 7.8f, 0), Quaternion.identity, _enemyContainer.transform);
+            if (obj.TryGetComponent<Enemy>(out Enemy enemy))
+            {
+                Enemy.EnemyMovementType enemyMovementType = (Enemy.EnemyMovementType)Random.Range(0, (int)Enemy.EnemyMovementType.MAX + 1);
+                float enemySpeed = Random.Range(3f, 4f);
+                float enemyAmplitude = Random.Range(1f, 2f);
+                float enemyFrequency = Random.Range(1f, 2f);
+                enemy.SetEnemyMovementType(enemyMovementType, enemySpeed, enemyAmplitude, enemyFrequency);
+            }
             yield return new WaitForSeconds(5.0f);
         }
     }

@@ -54,9 +54,6 @@ public class Player : MonoBehaviour
     private float _thrusterMaxNitro = 5.0f;
     private float _thrusterNitro;
 
-    private Transform _mainCameraInitialTransform;
-
-
     // Start is called before the first frame update
     void Start()
     {

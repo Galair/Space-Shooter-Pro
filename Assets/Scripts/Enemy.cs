@@ -16,7 +16,26 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private GameObject _laserPrefab;
     private float _canFire = -1;
-    private bool _isNotHit = true;
+    private bool _isHit = false;
+    [SerializeField]
+    private bool _frendlyFire = false;
+
+    public enum EnemyMovementType : int
+    {
+        Down = 0,
+        SideToSide = 1,
+
+        MAX = SideToSide
+    }
+
+    [SerializeField]
+    private EnemyMovementType _enemyMovementType = EnemyMovementType.Down;
+    private float positionX;
+    [SerializeField]
+    private float _amplitude = 2.0f;
+    [SerializeField]
+    private float _frequency = 2.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,19 +47,45 @@ public class Enemy : MonoBehaviour
         {
             Debug.LogError(gameObject.name + ": Animator component is NULL.");
         }
+        positionX = transform.position.x;
     }
 
     // Update is called once per frame
     void Update()
     {
-        CalculateMovement();
-        if ((_isNotHit) && (Time.time > _canFire)) StartCoroutine(FireLaserRoutine());
+        if (_isHit == false)
+        {
+            CalculateMovement();
+            if (Time.time > _canFire) StartCoroutine(FireLaserRoutine());
+        }
     }
 
     private void CalculateMovement()
     {
-        transform.Translate(Vector3.down * _speed * Time.deltaTime);
-        if (transform.position.y < -6.5f) transform.position = new Vector3(Random.Range(-9.45f, 9.45f), 6.93f, 0);
+        float newPositionY = transform.position.y - _speed * Time.deltaTime;
+        switch (_enemyMovementType)
+        {
+            case EnemyMovementType.SideToSide:
+                float offsetX = Mathf.Sin(Time.time * _frequency) * _amplitude;
+                transform.position = new Vector3(positionX + offsetX, newPositionY, 0);
+                break;
+            default:
+                transform.position = new Vector3(positionX, newPositionY, 0);
+                break;
+        }
+        if (transform.position.y < -6.5f)
+        {
+            transform.position = new Vector3(Random.Range(-9.45f, 9.45f), 7.5f, 0);
+            positionX = transform.position.x;
+        }
+    }
+
+    public void SetEnemyMovementType(EnemyMovementType movementType, float speed = 4f, float amplitude = 1f, float frequency = 1f )
+    {
+        _enemyMovementType = movementType;
+        _speed = speed;
+        _amplitude = amplitude;
+        _frequency = frequency;
     }
 
     IEnumerator FireLaserRoutine()
@@ -74,37 +119,56 @@ public class Enemy : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Destroy(GetComponent<Collider2D>());
-            StopAllCoroutines();
-            _speed = 0f;
-            _isNotHit = false;
             if (other.TryGetComponent(out Player player)) player.Damage();
-            _animator.SetTrigger("OnEnemyDeath");
-            // Inactivate enemy thrusters
-            for (int i = 0; i < transform.childCount; i++) transform.GetChild(i).gameObject.SetActive(false);
-            AudioSource.PlayClipAtPoint(_explosionSound, transform.position);
-            Destroy(this.gameObject, 2.633f);
+            DestroyEnemy();
         }
 
-        if (other.CompareTag("Laser") || other.CompareTag("Missile"))
+        if (other.CompareTag("Laser"))
         {
-            Destroy(GetComponent<Collider2D>());
-            StopAllCoroutines();
-            _speed = 0f;
-            _isNotHit = false;
-            if (_player != null)
+            Laser laser = other.GetComponent<Laser>();
+            if (laser == null)
             {
-                if (other.CompareTag("Missile") || (other.TryGetComponent<Laser>(out Laser laser) && laser.IsPlayerLaser))
+                Debug.LogError(other.name + ": Laser component is NULL.");
+            }
+            if (laser.IsEnemyLaser) //enemy laser
+            {
+                if (_frendlyFire == true)
+                {
+                    DestroyEnemy();
+                }
+            }
+            else //player laser
+            {
+                Destroy(other.gameObject);
+                if (_player != null)
                 {
                     _player.AddScore(10);
                 }
+                DestroyEnemy();
             }
-            _animator.SetTrigger("OnEnemyDeath");
-            // Inactivate enemy thrusters
-            for (int i = 0; i < transform.childCount; i++) transform.GetChild(i).gameObject.SetActive(false);
-            AudioSource.PlayClipAtPoint(_explosionSound, transform.position);
-            Destroy(other.gameObject);
-            Destroy(this.gameObject, 2.633f);
         }
+
+        if (other.CompareTag("Missile"))
+        {
+            Destroy(other.gameObject);
+            if (_player != null)
+            {
+                _player.AddScore(10);
+            }
+            DestroyEnemy();
+        }
+    }
+
+    void DestroyEnemy()
+    {
+        Destroy(GetComponent<Collider2D>());
+        StopAllCoroutines();
+        _speed = 0f;
+        _isHit = true;
+        _animator.SetTrigger("OnEnemyDeath");
+        // Inactivate enemy thrusters
+        for (int i = 0; i < transform.childCount; i++) transform.GetChild(i).gameObject.SetActive(false);
+        AudioSource.PlayClipAtPoint(_explosionSound, transform.position);
+        Destroy(this.gameObject, 2.633f);
     }
 }
