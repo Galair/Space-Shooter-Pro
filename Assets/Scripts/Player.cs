@@ -30,9 +30,11 @@ public class Player : MonoBehaviour
 
     private bool _isSecondaryFireActive = false;
     private bool _isSpeedBoostActive = false;
+    private bool _isReverseSteeringActive = false;
     private int _shieldStrength = 0;
     private Coroutine _secondaryFireCoroutine;
     private Coroutine _speedBoostCoroutine;
+    private Coroutine _reverseSteeringCoroutine;
     [SerializeField]
     private GameObject _shieldGameObject, _thrusterBoostGameObject;
     [SerializeField]
@@ -102,6 +104,13 @@ public class Player : MonoBehaviour
     {
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
+
+        if(_isReverseSteeringActive)
+        {
+            horizontalInput = -horizontalInput;
+            verticalInput = -verticalInput;
+        }
+
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
         Vector3 velocity = direction * _normalSpeed;
         
@@ -217,6 +226,12 @@ public class Player : MonoBehaviour
         _isSpeedBoostActive = false;
     }
 
+    IEnumerator ReverseSteeringPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5f);
+        _isReverseSteeringActive = false;
+    }
+
     public void ShieldActive()
     {
         _shieldStrength = 3;
@@ -254,6 +269,13 @@ public class Player : MonoBehaviour
                 _engines[Random.Range(0,2)].SetActive(false);
             }
         }
+    }
+
+    public void ReverseSteeringActive()
+    {
+        if (_reverseSteeringCoroutine != null) StopCoroutine(_reverseSteeringCoroutine);
+        _isReverseSteeringActive = true;
+        _reverseSteeringCoroutine = StartCoroutine(ReverseSteeringPowerDownRoutine());
     }
 
     private void OnTriggerEnter2D(Collider2D other)

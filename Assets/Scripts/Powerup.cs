@@ -6,7 +6,7 @@ public class Powerup : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 3.0f;
-    [SerializeField] //0 = Triple Shot; 1 = Speed; 2 = Shields; 3 = Ammo; 4 = Health; 5 = Missile
+    [SerializeField] //0=Triple Shot; 1=Speed; 2=Shields; 3=Ammo; 4=Health; 5=Missile; 6=Steer(Negative)
     private int _powerupID;
     [SerializeField]
     private AudioClip _audioClip;
@@ -44,6 +44,9 @@ public class Powerup : MonoBehaviour
                         break;
                     case 5:
                         player.MissileActive();
+                        break;
+                    case 6:
+                        player.ReverseSteeringActive();
                         break;
                 }
             }
