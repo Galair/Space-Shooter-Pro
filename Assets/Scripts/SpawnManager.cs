@@ -75,9 +75,7 @@ public class SpawnManager : MonoBehaviour
             {
                 Enemy.EnemyMovementType enemyMovementType = (Enemy.EnemyMovementType)Random.Range(0, (int)Enemy.EnemyMovementType.MAX + 1);
                 float enemySpeed = Random.Range(3f, 4f);
-                float enemyAmplitude = Random.Range(1f, 2f);
-                float enemyFrequency = Random.Range(1f, 2f);
-                enemyScript.SetEnemyMovementType(enemyMovementType, enemySpeed, enemyAmplitude, enemyFrequency);
+                enemyScript.SetEnemyMovementType(enemyMovementType, enemySpeed);
                 //30% chance for shield on normal enemy and 100% chance on other 
                 if ((Random.value + enemyID) > 0.7f) enemyScript.SetShieldActive(true);
                 currentEnemy--;

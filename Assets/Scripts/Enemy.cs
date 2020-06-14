@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices.ComTypes;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Enemy : MonoBehaviour
 {
@@ -34,14 +35,23 @@ public class Enemy : MonoBehaviour
 
     [SerializeField]
     private EnemyMovementType _enemyMovementType = EnemyMovementType.Down;
-    private float positionX;
+    private Vector3 _moveDirection = Vector3.down;
+    private float _sideToSideAngle = 45.0f;
+    private float _sideRotationSpeed = 1.0f;
     [SerializeField]
-    private float _amplitude = 2.0f;
-    [SerializeField]
-    private float _frequency = 2.0f;
+    private bool _moveToRight = true;
+
 
     [SerializeField]
     private GameObject _shieldGameObject;
+
+    [SerializeField]
+    private float _proximitySensor = 4.0f;
+    [SerializeField]
+    private float _ramRotateSpeed = 0.5f;
+    [SerializeField]
+    private float _maxAngleToRam = 60.0f;
+    private bool _ramModeActive = false;
 
     // Start is called before the first frame update
     void Start()
@@ -54,7 +64,6 @@ public class Enemy : MonoBehaviour
         {
             Debug.LogError(gameObject.name + ": Animator component is NULL.");
         }
-        positionX = transform.position.x;
     }
 
     // Update is called once per frame
@@ -62,37 +71,62 @@ public class Enemy : MonoBehaviour
     {
         if (_isHit == false)
         {
+            CheckRamRange();
             CalculateMovement();
-            if (Time.time > _canFire) StartCoroutine(FireLaserRoutine());          
+            if (Time.time > _canFire) StartCoroutine(FireLaserRoutine());
         }
     }
 
     private void CalculateMovement()
     {
-        float newPositionY = transform.position.y - _speed * Time.deltaTime;
-        switch (_enemyMovementType)
+        if (_ramModeActive == false)
         {
-            case EnemyMovementType.SideToSide:
-                float offsetX = Mathf.Sin(Time.time * _frequency) * _amplitude;
-                transform.position = new Vector3(positionX + offsetX, newPositionY, 0);
-                break;
-            default:
-                transform.position = new Vector3(positionX, newPositionY, 0);
-                break;
+            switch (_enemyMovementType)
+            {
+                case EnemyMovementType.SideToSide:
+                    float angle;
+                    if (_moveToRight)
+                    {
+                        angle = Vector3.Angle(_moveDirection, Vector3.right);
+                        _moveDirection = Vector3.RotateTowards(_moveDirection, Vector3.right, _sideRotationSpeed * Time.deltaTime, 0f);
+                    }
+                    else
+                    {
+                        angle = Vector3.Angle(_moveDirection, Vector3.left);
+                        _moveDirection = Vector3.RotateTowards(_moveDirection, Vector3.left, _sideRotationSpeed * Time.deltaTime, 0f);
+                    }
+                    if (angle < _sideToSideAngle) _moveToRight = !_moveToRight;
+                    break;
+                default:
+                    _moveDirection = Vector3.RotateTowards(_moveDirection, Vector3.down, _ramRotateSpeed * Time.deltaTime, 0f);
+                    break;
+            }
         }
+        transform.Translate(_moveDirection * _speed * Time.deltaTime);
+        Debug.DrawRay(transform.position, _moveDirection, Color.red);
         if (transform.position.y < -6.5f)
         {
             transform.position = new Vector3(Random.Range(-9.45f, 9.45f), 7.5f, 0);
-            positionX = transform.position.x;
+            _ramModeActive = false;
+            _moveDirection = Vector3.down;
         }
     }
 
-    public void SetEnemyMovementType(EnemyMovementType movementType, float speed = 4f, float amplitude = 1f, float frequency = 1f )
+    private void CheckRamRange()
+    {
+        Vector3 vectorToPlayer = _player.transform.position - transform.position;
+        if ((vectorToPlayer.magnitude < _proximitySensor)&&(Vector3.Angle(Vector3.down,vectorToPlayer) < _maxAngleToRam))
+        {
+            _moveDirection = Vector3.RotateTowards(_moveDirection, vectorToPlayer, _ramRotateSpeed * Time.deltaTime, 0f);
+            _ramModeActive = true;
+        }
+        else _ramModeActive = false;
+    }
+
+    public void SetEnemyMovementType(EnemyMovementType movementType, float speed = 4f)
     {
         _enemyMovementType = movementType;
         _speed = speed;
-        _amplitude = amplitude;
-        _frequency = frequency;
     }
 
     IEnumerator FireLaserRoutine()

@@ -360,9 +360,11 @@ MonoBehaviour:
   _frendlyFire: 0
   _enemyID: 0
   _enemyMovementType: 0
-  _amplitude: 2
-  _frequency: 2
+  _moveToRight: 1
   _shieldGameObject: {fileID: 561968062436776702}
+  _proximitySensor: 4
+  _ramRotateSpeed: 0.5
+  _maxAngleToRam: 60
 --- !u!212 &4801217186378964673
 SpriteRenderer:
   m_ObjectHideFlags: 0
