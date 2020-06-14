@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField]
-    private GameObject _enemyPrefab;
+    private GameObject[] _enemyPrefabs; //0=Enemy 1=Enemy_Green
     [SerializeField]
     private GameObject[] _powerups;
     [SerializeField]
@@ -58,16 +58,21 @@ public class SpawnManager : MonoBehaviour
     {
         yield return new WaitForSeconds(2.0f);
         int currentEnemy = enemysToSpawn;
+        Vector3 enemyPosition;
+        int enemyID;
+        GameObject enemy;
         do
         {
-            GameObject obj = Instantiate(_enemyPrefab, new Vector3(Random.Range(-9f, 9f), 7.8f, 0), Quaternion.identity, _enemyContainer.transform);
-            if (obj.TryGetComponent<Enemy>(out Enemy enemy))
+            enemyPosition = new Vector3(Random.Range(-9f, 9f), 7.8f, 0);
+            enemyID = Random.Range(0, _enemyPrefabs.Length);
+            enemy = Instantiate(_enemyPrefabs[enemyID], enemyPosition, Quaternion.identity, _enemyContainer.transform);
+            if (enemy.TryGetComponent<Enemy>(out Enemy enemyScript))
             {
                 Enemy.EnemyMovementType enemyMovementType = (Enemy.EnemyMovementType)Random.Range(0, (int)Enemy.EnemyMovementType.MAX + 1);
                 float enemySpeed = Random.Range(3f, 4f);
                 float enemyAmplitude = Random.Range(1f, 2f);
                 float enemyFrequency = Random.Range(1f, 2f);
-                enemy.SetEnemyMovementType(enemyMovementType, enemySpeed, enemyAmplitude, enemyFrequency);
+                enemyScript.SetEnemyMovementType(enemyMovementType, enemySpeed, enemyAmplitude, enemyFrequency);
                 currentEnemy--;
             }
             yield return new WaitForSeconds(Random.Range(0.5f, 1.5f));

@@ -5,6 +5,7 @@ using UnityEngine;
 public class Laser : MonoBehaviour
 {
     private float _speed = 8.0f;
+    [SerializeField]
     private bool _isEnemyLaser = false;
     public bool IsEnemyLaser { get => _isEnemyLaser; }
     public bool IsPlayerLaser { get => !_isEnemyLaser; }

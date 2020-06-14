@@ -20,6 +20,9 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private bool _frendlyFire = false;
 
+    [SerializeField]
+    private int _enemyID = 0; //0=Enemy 1=Enemy_Green
+
     public enum EnemyMovementType : int
     {
         Down = 0,
@@ -56,7 +59,7 @@ public class Enemy : MonoBehaviour
         if (_isHit == false)
         {
             CalculateMovement();
-            if (Time.time > _canFire) StartCoroutine(FireLaserRoutine());
+            if (Time.time > _canFire) StartCoroutine(FireLaserRoutine());          
         }
     }
 
@@ -93,27 +96,36 @@ public class Enemy : MonoBehaviour
         _canFire = Time.time + Random.Range(3f, 7f);
         Vector3 positionLeft = new Vector3(-0.24f, -1.8f, 0f);
         Vector3 positionRight = new Vector3(0.24f, -1.8f, 0f);
-        GameObject enemyLaserLeft, enemyLaserRight;
-        Laser laser;
-        if (Random.Range(0,2)==0)
+        Vector3 positionCenter = new Vector3(0f, -1.8f, 0f);
+
+        switch (_enemyID)
         {
-            //fire left then right laser
-            enemyLaserLeft = Instantiate(_laserPrefab, transform.position + positionLeft, Quaternion.identity);
-            if (enemyLaserLeft.TryGetComponent<Laser>(out laser)) laser.SetEnemyLaser();
-            yield return new WaitForSeconds(Random.Range(0f,0.5f));
-            enemyLaserRight = Instantiate(_laserPrefab, transform.position + positionRight, Quaternion.identity);
-            if (enemyLaserRight.TryGetComponent<Laser>(out laser)) laser.SetEnemyLaser();
-        }
-        else
-        {
-            //fire right then left laser
-            enemyLaserRight = Instantiate(_laserPrefab, transform.position + positionRight, Quaternion.identity);
-            if (enemyLaserRight.TryGetComponent<Laser>(out laser)) laser.SetEnemyLaser();
-            yield return new WaitForSeconds(Random.Range(0f, 0.5f));
-            enemyLaserLeft = Instantiate(_laserPrefab, transform.position + positionLeft, Quaternion.identity);
-            if (enemyLaserLeft.TryGetComponent<Laser>(out laser)) laser.SetEnemyLaser();
+            case 0:
+                if (Random.Range(0, 2) == 0)
+                {
+                    //fire left then right laser
+                    Instantiate(_laserPrefab, transform.position + positionLeft, Quaternion.identity);
+                    yield return new WaitForSeconds(Random.Range(0f, 0.5f));
+                    Instantiate(_laserPrefab, transform.position + positionRight, Quaternion.identity);
+                }
+                else
+                {
+                    //fire right then left laser
+                    Instantiate(_laserPrefab, transform.position + positionRight, Quaternion.identity);
+                    yield return new WaitForSeconds(Random.Range(0f, 0.5f));
+                    Instantiate(_laserPrefab, transform.position + positionLeft, Quaternion.identity);
+                }
+                break;
+            case 1:
+                Instantiate(_laserPrefab, transform.position + positionLeft, Quaternion.Euler(0, 0, -10));
+                Instantiate(_laserPrefab, transform.position + positionRight, Quaternion.Euler(0, 0, 10));
+                yield return new WaitForSeconds(0.2f);
+                Instantiate(_laserPrefab, transform.position + positionCenter, Quaternion.identity);
+                break;
+
         }
     }
+
 
     private void OnTriggerEnter2D(Collider2D other)
     {

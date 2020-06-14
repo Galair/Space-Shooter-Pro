@@ -72,7 +72,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: -1
   m_Sprite: {fileID: 21300000, guid: a45d21c30e0154a9ca1a5d6fb2bf3cfa, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -173,7 +173,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: -1
   m_Sprite: {fileID: 21300000, guid: a45d21c30e0154a9ca1a5d6fb2bf3cfa, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -217,7 +217,7 @@ GameObject:
   - component: {fileID: -6667761262634456541}
   - component: {fileID: 8541152211708816974}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Enemy_Green
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -253,10 +253,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 4
   _explosionSound: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
-  _laserPrefab: {fileID: 8809072098122258910, guid: 59a453405948ea04d9b1d520ddb26497,
+  _laserPrefab: {fileID: 8809072098122258910, guid: 3bc1444ab5d2cab43843b4954fbd3ece,
     type: 3}
   _frendlyFire: 0
-  _enemyID: 0
+  _enemyID: 1
   _enemyMovementType: 0
   _amplitude: 2
   _frequency: 2
@@ -300,8 +300,8 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 3154912113cbb4a498df6f571c74e18c, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_Color: {r: 0.7264151, g: 1, b: 0.52156866, a: 1}
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 5.12, y: 5.12}
