@@ -2439,15 +2439,16 @@ MonoBehaviour:
   _enemyPrefabs:
   - {fileID: 8900992600005531990, guid: 9ef62b1fbbe541b4d82cec005e686699, type: 3}
   - {fileID: 8900992600005531990, guid: ab81733926a52654b9c8f4d9692bec6e, type: 3}
+  _frequentPowerups:
+  - {fileID: 5017996140252054665, guid: 18a7f4be6f7d7d94cac39f002fd2e5d5, type: 3}
   _powerups:
   - {fileID: 4749351746837805721, guid: a072bd9004f181e44ab6ac5a3333eb14, type: 3}
-  - {fileID: 6741761416733710832, guid: 791ea4022c10a86439693e5e94a4d1bd, type: 3}
   - {fileID: 5017996140252054665, guid: 9b2ea2fc76550074398674f73ca1de78, type: 3}
-  - {fileID: 5017996140252054665, guid: 18a7f4be6f7d7d94cac39f002fd2e5d5, type: 3}
-  - {fileID: 5017996140252054665, guid: 0325c98649d4b6240ae99543c911037a, type: 3}
+  - {fileID: 6741761416733710832, guid: 791ea4022c10a86439693e5e94a4d1bd, type: 3}
+  - {fileID: 4749351746837805721, guid: 2f46d5f2f0fd3bc4da248d42043a6eba, type: 3}
   - {fileID: 6741761416733710832, guid: 48f6af8b93c27ac4593c6ef749c6ca77, type: 3}
   _rarePowerups:
-  - {fileID: 4749351746837805721, guid: 2f46d5f2f0fd3bc4da248d42043a6eba, type: 3}
+  - {fileID: 5017996140252054665, guid: 0325c98649d4b6240ae99543c911037a, type: 3}
   _enemyContainer: {fileID: 228306387}
 --- !u!4 &1778270512
 Transform:

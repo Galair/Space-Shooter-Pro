@@ -7,6 +7,8 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject[] _enemyPrefabs; //0=Enemy 1=Enemy_Green
     [SerializeField]
+    private GameObject[] _frequentPowerups;
+    [SerializeField]
     private GameObject[] _powerups;
     [SerializeField]
     private GameObject[] _rarePowerups;
@@ -63,8 +65,11 @@ public class SpawnManager : MonoBehaviour
         GameObject enemy;
         do
         {
+            // 75% chance for normal enemy idx=0; 25% chance for other enemy type idx>0 
+            if (Random.value > 0.75) enemyID = Random.Range(1, _enemyPrefabs.Length);
+            else enemyID = 0;
+            
             enemyPosition = new Vector3(Random.Range(-9f, 9f), 7.8f, 0);
-            enemyID = Random.Range(0, _enemyPrefabs.Length);
             enemy = Instantiate(_enemyPrefabs[enemyID], enemyPosition, Quaternion.identity, _enemyContainer.transform);
             if (enemy.TryGetComponent<Enemy>(out Enemy enemyScript))
             {
@@ -83,16 +88,26 @@ public class SpawnManager : MonoBehaviour
     IEnumerator SpawnPowerupRoutine()
     {
         yield return new WaitForSeconds(5.0f);
+        float randomPowerupType;
+        Vector3 powerupPosition;
+
         while (_isPlayerAlive)
         {
-            // 10% chance for rare powerup
-            if (Random.value > 0.9f)
-            {
-                Instantiate(_rarePowerups[Random.Range(0, _rarePowerups.Length)], new Vector3(Random.Range(-9f, 9f), 7.6f, 0), Quaternion.identity);
+            randomPowerupType = Random.value;
+            powerupPosition = new Vector3(Random.Range(-9f, 9f), 7.6f, 0);
+           
+            if (randomPowerupType > 0.9f) // 10% chance for rare powerup
+                    {
+                Instantiate(_rarePowerups[Random.Range(0, _rarePowerups.Length)], powerupPosition, Quaternion.identity);
+                
             }
-            else
+            else if (randomPowerupType > 0.6f) // 30% chance for normal powerup;
             {
-                Instantiate(_powerups[Random.Range(0, _powerups.Length)], new Vector3(Random.Range(-9f, 9f), 7.6f, 0), Quaternion.identity);
+                Instantiate(_powerups[Random.Range(0, _powerups.Length)], powerupPosition, Quaternion.identity);
+            }
+            else  // 60% chance for frequent powerup
+            {
+                Instantiate(_frequentPowerups[Random.Range(0, _frequentPowerups.Length)], powerupPosition, Quaternion.identity);
             }
             yield return new WaitForSeconds(Random.Range(4f, 8f));
         }
