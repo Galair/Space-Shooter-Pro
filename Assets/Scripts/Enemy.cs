@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -38,6 +39,9 @@ public class Enemy : MonoBehaviour
     private float _amplitude = 2.0f;
     [SerializeField]
     private float _frequency = 2.0f;
+
+    [SerializeField]
+    private GameObject _shieldGameObject;
 
     // Start is called before the first frame update
     void Start()
@@ -126,13 +130,18 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void SetShieldActive(bool value)
+    {
+        _shieldGameObject.SetActive(value);
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
             if (other.TryGetComponent(out Player player)) player.Damage();
-            DestroyEnemy();
+            if (_shieldGameObject.activeInHierarchy) _shieldGameObject.SetActive(false);
+            else DestroyEnemy();
         }
 
         if (other.CompareTag("Laser"))
@@ -142,32 +151,38 @@ public class Enemy : MonoBehaviour
             {
                 Debug.LogError(other.name + ": Laser component is NULL.");
             }
-            if (laser.IsEnemyLaser) //enemy laser
+            if (laser.IsPlayerLaser)
             {
-                if (_frendlyFire == true)
+                Destroy(other.gameObject);
+                if (_shieldGameObject.activeInHierarchy) _shieldGameObject.SetActive(false);
+                else
                 {
+                    if (_player != null) _player.AddScore(10);
                     DestroyEnemy();
                 }
             }
-            else //player laser
+            else if (_frendlyFire == true) // enemy fredndly laser
             {
                 Destroy(other.gameObject);
-                if (_player != null)
-                {
-                    _player.AddScore(10);
-                }
-                DestroyEnemy();
+                if (_shieldGameObject.activeInHierarchy) _shieldGameObject.SetActive(false);
+                else DestroyEnemy();
             }
+
         }
 
         if (other.CompareTag("Missile"))
         {
             Destroy(other.gameObject);
-            if (_player != null)
+            if (_shieldGameObject.activeInHierarchy) _shieldGameObject.SetActive(false);
+            else
             {
-                _player.AddScore(10);
+                if (_player != null)
+                {
+                    _player.AddScore(10);
+                }
+
+                DestroyEnemy();
             }
-            DestroyEnemy();
         }
     }
 

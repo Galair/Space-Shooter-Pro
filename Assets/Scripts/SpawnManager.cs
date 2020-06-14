@@ -66,7 +66,7 @@ public class SpawnManager : MonoBehaviour
         do
         {
             // 75% chance for normal enemy idx=0; 25% chance for other enemy type idx>0 
-            if (Random.value > 0.75) enemyID = Random.Range(1, _enemyPrefabs.Length);
+            if (Random.value > 0.75f) enemyID = Random.Range(1, _enemyPrefabs.Length);
             else enemyID = 0;
             
             enemyPosition = new Vector3(Random.Range(-9f, 9f), 7.8f, 0);
@@ -78,6 +78,8 @@ public class SpawnManager : MonoBehaviour
                 float enemyAmplitude = Random.Range(1f, 2f);
                 float enemyFrequency = Random.Range(1f, 2f);
                 enemyScript.SetEnemyMovementType(enemyMovementType, enemySpeed, enemyAmplitude, enemyFrequency);
+                //30% chance for shield on normal enemy and 100% chance on other 
+                if ((Random.value + enemyID) > 0.7f) enemyScript.SetShieldActive(true);
                 currentEnemy--;
             }
             yield return new WaitForSeconds(Random.Range(0.5f, 1.5f));
