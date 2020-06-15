@@ -82,7 +82,11 @@ public class Enemy : MonoBehaviour
             }
             CheckRamRange();
             CalculateMovement();
-            if (Time.time > _canFire) StartCoroutine(FireLaserRoutine());
+            FireIfPowerupFront();
+            if (Time.time > _canFire)
+            {
+                StartCoroutine(FireLaserRoutine());
+            }
         }
     }
 
@@ -139,6 +143,18 @@ public class Enemy : MonoBehaviour
         {
             Instantiate(_sternGunPrefab, transform.position + new Vector3(0f, 1.2f, 0f), Quaternion.identity);
         }
+    }
+
+    private bool FireIfPowerupFront()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position + new Vector3(0f, -1.2f, 0f), Vector2.down);
+        if ((hit.collider != null) && (hit.transform.CompareTag("Powerup")))
+        {
+            _canFire = Time.time + Random.Range(3f, 7f);
+            Instantiate(_laserPrefab, transform.position + new Vector3(0f, -1.8f, 0f), Quaternion.identity);
+            return true;
+        }
+        return false;
     }
 
     public void SetEnemyMovementType(EnemyMovementType movementType, float speed = 4f)

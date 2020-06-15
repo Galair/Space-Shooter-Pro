@@ -10,6 +10,8 @@ public class Powerup : MonoBehaviour
     private int _powerupID;
     [SerializeField]
     private AudioClip _audioClip;
+    [SerializeField]
+    private GameObject _explosionPrefab;
 
     // Update is called once per frame
     void Update()
@@ -51,6 +53,23 @@ public class Powerup : MonoBehaviour
                 }
             }
             Destroy(this.gameObject);
+        }
+
+        if (other.CompareTag("Laser"))
+        {
+            Laser laser = other.GetComponent<Laser>();
+            if (laser == null)
+            {
+                Debug.LogError(other.name + ": Laser component is NULL.");
+            }
+            if (laser.IsEnemyLaser)
+            {
+                Destroy(GetComponent<Collider2D>());
+                Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+                Destroy(other.gameObject);
+                Destroy(this.gameObject, 0.25f);
+            }
+
         }
     }
 }
