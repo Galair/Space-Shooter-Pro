@@ -23,7 +23,7 @@ public class Enemy : MonoBehaviour
     private bool _frendlyFire = false;
 
     [SerializeField]
-    private int _enemyID = 0; //0=Enemy 1=Enemy_Green
+    private int _enemyID = 0; //0=Enemy 1=Enemy_Green 2=Enemy_Smart
 
     public enum EnemyMovementType : int
     {
@@ -36,9 +36,10 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private EnemyMovementType _enemyMovementType = EnemyMovementType.Down;
     private Vector3 _moveDirection = Vector3.down;
-    private float _sideToSideAngle = 45.0f;
-    private float _sideRotationSpeed = 1.0f;
     [SerializeField]
+    private float _sideToSideAngle = 45.0f;
+    [SerializeField]
+    private float _sideRotationSpeed = 1.0f;
     private bool _moveToRight = true;
 
 
@@ -52,6 +53,9 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float _maxAngleToRam = 60.0f;
     private bool _ramModeActive = false;
+
+    [SerializeField]
+    private GameObject _sternGunPrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -71,6 +75,11 @@ public class Enemy : MonoBehaviour
     {
         if (_isHit == false)
         {
+            //if Smart Enemy
+            if(_enemyID == 2)
+            {
+                CheckIfPlayerBehind();
+            }
             CheckRamRange();
             CalculateMovement();
             if (Time.time > _canFire) StartCoroutine(FireLaserRoutine());
@@ -121,6 +130,15 @@ public class Enemy : MonoBehaviour
             _ramModeActive = true;
         }
         else _ramModeActive = false;
+    }
+
+    private void CheckIfPlayerBehind()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position + new Vector3(0f, 1.2f, 0f), Vector2.up);
+        if ((hit.collider != null) && (hit.transform.CompareTag("Player")))
+        {
+            Instantiate(_sternGunPrefab, transform.position + new Vector3(0f, 1.2f, 0f), Quaternion.identity);
+        }
     }
 
     public void SetEnemyMovementType(EnemyMovementType movementType, float speed = 4f)

@@ -289,6 +289,13 @@ public class Player : MonoBehaviour
                 AudioSource.PlayClipAtPoint(_explosionSound, transform.position);
             }
         }
+
+        if(other.CompareTag("SternGun"))
+        {
+            Destroy(other.gameObject);
+            Damage();
+            AudioSource.PlayClipAtPoint(_explosionSound, transform.position);
+        }
         
     }
 }
