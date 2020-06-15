@@ -23,7 +23,7 @@ public class Enemy : MonoBehaviour
     private bool _frendlyFire = false;
 
     [SerializeField]
-    private int _enemyID = 0; //0=Enemy 1=Enemy_Green 2=Enemy_Smart
+    private int _enemyID = 0; //0=Enemy 1=Enemy_Green 2=Enemy_Smart 3=Enemy_Avoid
 
     public enum EnemyMovementType : int
     {
@@ -57,6 +57,10 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private GameObject _sternGunPrefab;
 
+    private bool _evasiveManeuvers = false;
+    Coroutine _evasiveManeuversCoroutine;
+    private Vector3 _evasiveDirection;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -80,8 +84,15 @@ public class Enemy : MonoBehaviour
             {
                 CheckIfPlayerBehind();
             }
-            CheckRamRange();
-            CalculateMovement();
+            if (_evasiveManeuvers)
+            {
+                CalculateEvasiveManeuvers();
+            }
+            else
+            {
+                CheckRamRange();
+                CalculateMovement();
+            }
             FireIfPowerupFront();
             if (Time.time > _canFire)
             {
@@ -90,6 +101,11 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void CalculateEvasiveManeuvers()
+    {
+            _moveDirection = Vector3.RotateTowards(_moveDirection, _evasiveDirection, 15.0f * Time.deltaTime, 0f);
+            transform.Translate(_moveDirection * 7.0f * Time.deltaTime);
+    }
     private void CalculateMovement()
     {
         if (_ramModeActive == false)
@@ -155,6 +171,22 @@ public class Enemy : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    public void LaserDetected(Vector3 position)
+    {
+        if (_evasiveManeuversCoroutine != null) StopCoroutine(_evasiveManeuversCoroutine);
+        _evasiveManeuvers = true;
+        if (position.x > transform.position.x) _evasiveDirection = Vector3.left;
+        else _evasiveDirection = Vector3.right;
+        _evasiveManeuversCoroutine = StartCoroutine(EvasiveManeuversRoutine());
+    }
+
+    IEnumerator EvasiveManeuversRoutine()
+    {
+        yield return new WaitForSeconds(0.25f);
+        _moveDirection = Vector3.down;
+        _evasiveManeuvers = false;
     }
 
     public void SetEnemyMovementType(EnemyMovementType movementType, float speed = 4f)
