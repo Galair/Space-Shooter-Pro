@@ -12,11 +12,36 @@ public class Powerup : MonoBehaviour
     private AudioClip _audioClip;
     [SerializeField]
     private GameObject _explosionPrefab;
+    private bool _pickupCollectorActive = false;
+    private GameObject _player;
 
+    private void Start()
+    {
+        _player = GameObject.FindGameObjectWithTag("Player");
+        if(_player==null)
+        {
+            Debug.LogError(gameObject.name + ": Player is NULL.");
+        }
+    }
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.down * _speed * Time.deltaTime);
+        _pickupCollectorActive = Input.GetKey(KeyCode.C);
+        CalculateMovement();
+    }
+
+    void CalculateMovement()
+    {
+        if ((_pickupCollectorActive)&&(_player!=null))
+        {
+            Vector3 direction = (_player.transform.position - transform.position).normalized;
+            transform.Translate(direction * _speed * 2.0f * Time.deltaTime);
+        }
+        else
+        {
+            transform.Translate(Vector3.down * _speed * Time.deltaTime);
+        }
+        
         if (transform.position.y < -6f) Destroy(this.gameObject);
     }
 
