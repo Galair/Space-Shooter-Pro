@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+//This task has already been done in the previous phase as a Secondary Fire Powerup
 public class Missile : MonoBehaviour
 {
     private Transform _target;
