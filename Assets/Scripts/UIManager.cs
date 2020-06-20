@@ -41,7 +41,7 @@ public class UIManager : MonoBehaviour
     public void UpdateLive(int currentLives)
     {
         _livesImage.sprite = _liveSprites[Mathf.Clamp(currentLives,0,3)];
-        if (currentLives == 0) StartCoroutine(GameOverFlickerRoutine());
+        if (currentLives == 0) StartCoroutine(GameOverFlickerRoutine("GAME OVER"));
     }
 
     public void UpdateShield(int currentShields)
@@ -70,14 +70,22 @@ public class UIManager : MonoBehaviour
         _thrusterText.text = Mathf.RoundToInt(_thrusterImage.fillAmount * 100).ToString() + "%";
     }
 
-    public void ShowWaveNumber(int waveNumber, int enemyNumber)
+    public void ShowWaveNumber(int waveNumber, int enemyNumber, bool isFinalWave = false)
     {
-        _waveText.text = "Wave: " + waveNumber + Environment.NewLine + " Enemies: " + enemyNumber;
+        if (isFinalWave)
+        {
+            _waveText.text = "Final Wave";
+        }
+        else
+        {
+            _waveText.text = "Wave: " + waveNumber + Environment.NewLine + " Enemies: " + enemyNumber;
+        }
         StartCoroutine(WaveNumberShowRoutine());
     }
 
-    IEnumerator GameOverFlickerRoutine()
+    IEnumerator GameOverFlickerRoutine(string gameOverText)
     {
+        yield return new WaitForSeconds(1.0f);
         _gameManager.GameOver();
         _gameOverText.gameObject.SetActive(true);
         while (true)
@@ -85,7 +93,7 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             _gameOverText.text = "";
             yield return new WaitForSeconds(0.5f);
-            _gameOverText.text = "GAME OVER";
+            _gameOverText.text = gameOverText;
         }
     }
 
@@ -94,5 +102,10 @@ public class UIManager : MonoBehaviour
         _waveText.gameObject.SetActive(true);
         yield return new WaitForSeconds(2.5f);
         _waveText.gameObject.SetActive(false);
+    }
+
+    public void GameWon()
+    {
+        StartCoroutine(GameOverFlickerRoutine("GAME WON!"));
     }
 }

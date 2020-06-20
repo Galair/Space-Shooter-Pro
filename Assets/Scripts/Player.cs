@@ -191,6 +191,14 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void Won()
+    {
+        _uiManager.GameWon();
+        _spawnManager.StopSpawning();
+        AddScore(150 + 50 * _lives);
+        Destroy(this.gameObject);
+    }
+
     public void TripleShotActive()
     {
         if (_secondaryFireCoroutine != null) StopCoroutine(_secondaryFireCoroutine);
@@ -290,12 +298,11 @@ public class Player : MonoBehaviour
             }
         }
 
-        if(other.CompareTag("SternGun"))
+        if(other.CompareTag("SternGun")||other.CompareTag("Bullet"))
         {
             Destroy(other.gameObject);
             Damage();
             AudioSource.PlayClipAtPoint(_explosionSound, transform.position);
         }
-        
     }
 }

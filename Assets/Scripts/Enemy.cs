@@ -143,13 +143,16 @@ public class Enemy : MonoBehaviour
 
     private void CheckRamRange()
     {
-        Vector3 vectorToPlayer = _player.transform.position - transform.position;
-        if ((vectorToPlayer.magnitude < _proximitySensor)&&(Vector3.Angle(Vector3.down,vectorToPlayer) < _maxAngleToRam))
+        if (_player != null)
         {
-            _moveDirection = Vector3.RotateTowards(_moveDirection, vectorToPlayer, _ramRotateSpeed * Time.deltaTime, 0f);
-            _ramModeActive = true;
+            Vector3 vectorToPlayer = _player.transform.position - transform.position;
+            if ((vectorToPlayer.magnitude < _proximitySensor) && (Vector3.Angle(Vector3.down, vectorToPlayer) < _maxAngleToRam))
+            {
+                _moveDirection = Vector3.RotateTowards(_moveDirection, vectorToPlayer, _ramRotateSpeed * Time.deltaTime, 0f);
+                _ramModeActive = true;
+            }
+            else _ramModeActive = false;
         }
-        else _ramModeActive = false;
     }
 
     private void CheckIfPlayerBehind()
@@ -267,7 +270,6 @@ public class Enemy : MonoBehaviour
                 if (_shieldGameObject.activeInHierarchy) _shieldGameObject.SetActive(false);
                 else DestroyEnemy();
             }
-
         }
 
         if (other.CompareTag("Missile"))
@@ -280,7 +282,6 @@ public class Enemy : MonoBehaviour
                 {
                     _player.AddScore(10);
                 }
-
                 DestroyEnemy();
             }
         }

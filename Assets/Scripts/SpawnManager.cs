@@ -7,6 +7,8 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject[] _enemyPrefabs; //0=Enemy 1=Enemy_Green
     [SerializeField]
+    private GameObject _bossPrefab;
+    [SerializeField]
     private GameObject[] _frequentPowerups;
     [SerializeField]
     private GameObject[] _powerups;
@@ -16,6 +18,7 @@ public class SpawnManager : MonoBehaviour
     private GameObject _enemyContainer;
     private bool _isPlayerAlive = true;
     private int _enemyWaveCounter = 1;
+    private int _bossWaveNumber = 3;
     private bool _currentWaveEnded = false;
     private Coroutine currentWaveRoutine;
     private UIManager _uiManager;
@@ -53,6 +56,13 @@ public class SpawnManager : MonoBehaviour
                 yield return new WaitForSeconds(1f);
             }
             _enemyWaveCounter++;
+            if (_enemyWaveCounter == _bossWaveNumber)
+            {
+                _uiManager.ShowWaveNumber(0, 0, true);
+                yield return new WaitForSeconds(2.0f);
+                Instantiate(_bossPrefab, new Vector3(0.0f, 8.2f, 0.0f), Quaternion.identity, _enemyContainer.transform);
+                break;
+            }
         }
     }
 

@@ -2441,6 +2441,8 @@ MonoBehaviour:
   - {fileID: 8900992600005531990, guid: ab81733926a52654b9c8f4d9692bec6e, type: 3}
   - {fileID: 8900992600005531990, guid: 26a1079ada0d4694fab078316144653a, type: 3}
   - {fileID: 8900992600005531990, guid: d73b3fdf678e03e4883358ac8786ab7f, type: 3}
+  _bossPrefab: {fileID: 7113347857365135894, guid: b9bfbcdd741ac784c8d924a3132832ba,
+    type: 3}
   _frequentPowerups:
   - {fileID: 5017996140252054665, guid: 18a7f4be6f7d7d94cac39f002fd2e5d5, type: 3}
   _powerups:
